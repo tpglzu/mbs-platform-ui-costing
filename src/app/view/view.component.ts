@@ -13,7 +13,7 @@ export class ViewComponent implements OnInit, OnDestroy {
   productionList = []
   prodId = 1
   viewType = "hourly"
-  period = "2021-12-4~2021-12-10"
+  period = "2021-12-4~2021-12-30"
 
   viewTypeDefineList = [
     {
@@ -51,11 +51,13 @@ export class ViewComponent implements OnInit, OnDestroy {
       var xAxisData = []
       var series1Data = []
       var series2Data = []
+      var series3Data = []
 
       for (var key in mapObj) {
         xAxisData.push(key)
         series1Data.push(mapObj[key][0])
         series2Data.push(mapObj[key][1])
+        series3Data.push(mapObj[key][2])
       }
 
       this.myChart = echarts.init(document.getElementById('main'));
@@ -69,7 +71,7 @@ export class ViewComponent implements OnInit, OnDestroy {
           trigger: 'axis'
         },
         legend: {
-          data: ['実績', '計画']
+          data: ['実績', '予測', '計画']
         },
         xAxis: {
           type: 'category',
@@ -85,8 +87,13 @@ export class ViewComponent implements OnInit, OnDestroy {
             type: 'line'
           },
           {
-            name: '計画',
+            name: '予測',
             data: series2Data,
+            type: 'line'
+          },
+          {
+            name: '計画',
+            data: series3Data,
             type: 'line'
           }
         ]

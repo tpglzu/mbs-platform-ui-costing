@@ -30,18 +30,20 @@ export class InputComponent implements OnInit {
 
   onStartLot(){
     this.crud.startPlot(this.lotProd, {
-      "prod_cnt_target":this.lotCntTarget,
+      "prod_cnt_pred":this.lotCntTarget,
     }).subscribe(res => {
-      this.lotId = res['lot_id']; 
-      console.log("lotId : " + this.lotId)
-    })
+        this.lotId = res['lot_id']; 
+        console.log("lotId : " + this.lotId)
+        this.crud.getProdRecipes(this.lotProd).subscribe(res => {
+        this.resourceUseageList = res
+        this.resourceUseageList.forEach((item, index) =>{
+          item['resource_cnt'] = item['resource_cnt'] * this.lotCntTarget
+          item['uuid'] = uuidv4()
+        })
 
-    this.crud.getProdRecipes(this.lotProd).subscribe(res => {
-      this.resourceUseageList = res
-      this.resourceUseageList.forEach((item, index) =>{item['uuid'] = uuidv4()})
-
-      // 該当製品所要の原材料一覧を取得する
-      res.forEach(item => this.resourceMap.set(item.resource_id, item.resource_name))
+        // 該当製品所要の原材料一覧を取得する
+        res.forEach(item => this.resourceMap.set(item.resource_id, item.resource_name))
+      })
     })
   }
 

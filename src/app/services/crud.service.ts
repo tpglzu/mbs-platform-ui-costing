@@ -10,7 +10,7 @@ export class CRUDService {
   api_productions = `${this.host}/productions`
   api_startlot = `${this.host}/plan/${this.plan_id}/lot/start/{prod_id}`
   api_prodrecipes = `${this.host}/production/{prod_id}/recipes`
-  api_commitResoueceUseage = `${this.host}/lot/{lot_id}/resource_usage`
+  api_commitResoueceUseage = `${this.host}/lot/{lot_id}/resource_usage?datetime={datetime}`
   api_stoplot = `${this.host}/lot/{lot_id}/stop`
   api_priceTimeSeries = `${this.host}/plan/${this.plan_id}/production/{prod_id}/price/{type}?start_date={start_date}&end_date={end_date}`
 
@@ -31,7 +31,10 @@ export class CRUDService {
   }
 
   public commitResourceUseage(lotId, body){
-    return this.rs.post(this.renderString(this.api_commitResoueceUseage,{'lot_id': lotId}), this.wrapperRequestBody(body))
+    return this.rs.post(this.renderString(this.api_commitResoueceUseage,{
+      'lot_id': lotId,
+      'datetime':this.formattDate()
+    }), body)
   }
 
   public stopPlot(lotId, body){
@@ -53,12 +56,16 @@ export class CRUDService {
     );
   }
 
-  private wrapperRequestBody(body){
+  private wrapperRequestBody(body){ 
+    body.datetime=this.formattDate()
+    return body
+  }
+
+  private formattDate(){
     const format = 'yyyy-MM-dd HH:mm:ss';
     const locale = 'en-US';
     const formattedDate = formatDate(Date.now(), format, locale);
-    body.datetime=formattedDate
-    return body
+    return formattedDate;
   }
 
 }
