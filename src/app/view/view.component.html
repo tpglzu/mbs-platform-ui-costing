@@ -1,0 +1,42 @@
+<div class="card mt-4">
+  <div class="card-header">
+    原価情報照会条件設定
+  </div>
+  <div class="card-body">
+
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="inputState">対象製品</label>
+          <select id="inputState" class="form-control" [(ngModel)]="prodId">
+              <option *ngFor="let prod of productionList" [ngValue]="prod.id" >
+                {{prod.name}}
+              </option>
+          </select>
+        </div>
+        <div class="form-group col-md-4">
+          <label >照会タイプ</label>
+          <div class="form-control">
+            <ng-template ngFor let-vtd let-i="index" [ngForOf]="viewTypeDefineList" >
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" [value]="vtd.value" [(ngModel)]="viewType">
+                <label class="form-check-label" for="inlineRadio1">{{vtd.name}}</label>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+        <div class="form-group col-md-4">
+          <label >期間</label>
+          <input type="text" class="form-control" [(ngModel)]="period" >
+        </div>
+      </div>
+      <button class="btn btn-primary" (click) = "onView()">照会</button>
+  </div>
+</div>
+<div class="card mt-4">
+  <div class="card-header">
+    原価情報照会結果
+  </div>
+  <div class="card-body">
+    <div id="main" style="width: 100%;height:400px;"></div>
+  </div>
+</div>

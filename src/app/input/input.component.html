@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-md-4">
+    <div class="card mt-4">
+      <div class="card-header">
+        ロット設定
+      </div>
+      <div class="card-body">
+
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label for="inputState">対象製品</label>
+              <select id="inputState" class="form-control" [(ngModel)]="lotProd">
+                  <option *ngFor="let prod of productionList" value="{{prod.id}}" >
+                    {{prod.name}}
+                  </option>
+              </select>
+            </div>
+            <div class="form-group col-md-6">
+              <label >予定良品数</label>
+              <input type="number" class="form-control" [(ngModel)]="lotCntTarget">
+            </div>
+          </div>
+          <button class="btn btn-primary" (click) = "onStartLot()">ロット生産開始</button>
+
+      </div>
+    </div>
+    <div class="card mt-4">
+      <div class="card-header">
+        ロット終了
+      </div>
+      <div class="card-body">
+          <div class="form-row">
+            <div class="form-group col-md-6">
+              <label >実績良品数</label>
+              <input type="number" class="form-control" [(ngModel)]="lotCntAcutal">
+            </div>
+          </div>
+          <button class="btn btn-primary" (click) = "onStopLot()" [disabled]="lotId == null">ロット生産終了</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card mt-4">
+      <div class="card-header">
+        資源投入
+      </div>
+      <div class="card-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">対象資源</th>
+              <th scope="col">投入数量</th>
+              <th scope="col">実績単価</th>
+              <th scope="col">投入状態</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <ng-template ngFor let-ru let-i="index" [ngForOf]="resourceUseageList" >
+              <tr *ngIf="ru.status == 1">
+                <th scope="row">{{i+1}}</th>
+                <td>{{resourceMap.get(ru.resource_id)}}</td>
+                <td>{{ru.resource_cnt}}</td>
+                <td>{{ru.price}}</td>
+                <td>投入済</td>
+              </tr>
+              <tr *ngIf="ru.status != 1">
+                <th scope="row">{{i+1}}</th>
+                <td>
+                  <select class="form-control" [(ngModel)]="ru.resource_id">
+                    <option *ngFor="let rs of resourceMap | keyvalue" [ngValue]="rs.key" >
+                      {{rs.value}}
+                    </option>
+                  </select>
+                </td>
+                <td><input type="number" class="form-control" [(ngModel)]="ru.resource_cnt" ></td>
+                <td><input type="number" class="form-control" [(ngModel)]="ru.price" ></td>
+                <td><button class="btn btn-outline-danger" (click)="onDeleteResource(i)" [disabled]="lotId == null">削除</button></td>
+              </tr>
+            </ng-template>
+            <tr>
+              <th scope="row"></th>
+              <td ></td>
+              <td ></td>
+              <td ></td>
+              <td> 
+                <button class="btn btn-outline-success" (click)="onAddResource()" [disabled]="lotId == null">追加</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="btn btn-primary" (click)="onCommitResource()" [disabled]="lotId == null">消費資源投入</button>
+      </div>
+    </div>
+  </div>
+</div>
